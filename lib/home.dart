@@ -23,7 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         //backgroundColor: Colors.green,
-        title: const Text('Home'),
+        centerTitle: true,
+        title: const Text('TODO APP'),
         actions: [
           IconButton(onPressed: (){
             Todos.clear();
