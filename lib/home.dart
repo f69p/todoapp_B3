@@ -15,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<ToDo> Todos=[];
 
-
+GlobalKey<FormState>todoFrom=GlobalKey<FormState>();
   @override
 
 
@@ -85,55 +85,76 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
   void showAddNewModelsheet(){
-    showModalBottomSheet(context: context, builder: (context){
+    showModalBottomSheet(context: context,
+        isScrollControlled: true,
+        
+        builder: (context){
+
           return Padding(
             padding: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Text(
-                  'Add New Todo',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 26,
-                      fontStyle: FontStyle.italic),
-                ),
-                TextField(
-                  controller: _titleTEController,
-                  decoration: InputDecoration(
-                    hintText: 'Title',
-                    border: OutlineInputBorder(),
+
+            child: Form(
+               key: todoFrom,
+              child: Column(
+
+                children: [
+                  Text(
+                    'Add New Todo',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 26,
+                        fontStyle: FontStyle.italic),
                   ),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                TextField(
-                  controller: _descriptionTEController,
-                  decoration: InputDecoration(
-                    hintText: 'Description',
-                    border: OutlineInputBorder(),
+                  TextFormField(
+                    controller: _titleTEController,
+                    decoration: InputDecoration(
+                      hintText: 'Title',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (String? value){
+                     if(value?.trim().isEmpty??true){
+                       return 'Please enter your title';
+                     }
+
+                      return null;
+                    },
                   ),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_titleTEController.text.trim().isNotEmpty &&
-                        _descriptionTEController.text.trim().isNotEmpty) {
-                      Todos.add(ToDo(_titleTEController.text.trim(),
-                          _descriptionTEController.text.trim(), false));
-                      if (mounted) {
-                        setState(() {});
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    controller: _descriptionTEController,
+                    decoration: InputDecoration(
+                      hintText: 'Description',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (String?value){
+                      if(value?.trim().isEmpty??true){
+                        return 'Enter your description';
                       }
-                      _titleTEController.clear();
-                      _descriptionTEController.clear();
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Icon(Icons.arrow_forward_ios),
-                )
-              ],
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (todoFrom.currentState!.validate()) {
+                        Todos.add(ToDo(_titleTEController.text.trim(),
+                            _descriptionTEController.text.trim(), false));
+                        if (mounted) {
+                          setState(() {});
+                        }
+                        _titleTEController.clear();
+                        _descriptionTEController.clear();
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Icon(Icons.arrow_forward_ios),
+                  )
+                ],
+              ),
             ),
           );
         });
